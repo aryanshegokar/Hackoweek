@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PlayStation®5 | Play Has No Limits</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sony: { blue: '#0070D1', dark: '#0b0b0b', surface: '#1f1f1f' },
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Bebas Neue', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #0b0b0b; color: #fff; overflow-x: hidden; }
+        .glass { background: rgba(11, 11, 11, 0.8); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .text-glow { text-shadow: 0 0 30px rgba(0, 112, 209, 0.6); }
+    </style>
+</head>
+<body class="antialiased">
+
+    <nav class="fixed top-0 w-full z-50 glass h-[72px] flex items-center justify-between px-6 md:px-12">
+        <div class="flex items-center gap-6">
+            <svg class="h-8 w-auto fill-white" viewBox="0 0 50 50"><path d="M4.3,37.3c0.4,1.1,1.4,1.5,2.4,1.5c0.6,0,1.2-0.2,1.8-0.5l19.5-10.8c2.5-1.4,2.5-3.6,0-5l-1.9-1.1L4.3,33.5C3.9,33.7,3.6,34,3.6,34.4C3.6,35.9,3.9,36.5,4.3,37.3z M29.1,19.8l16-8.9c0.9-0.5,1.5-1.4,1.5-2.5s-0.6-2-1.5-2.5L29.9,0.8C29,0.3,28,0,27,0c-1,0-2,0.3-2.9,0.8L1.5,13.4C0.6,13.9,0,14.8,0,15.9s0.6,2,1.5,2.5l23.5,13.1l2.6,1.4C28.2,33.3,29.1,33.3,29.1,19.8z"/></svg>
+        </div>
+        <div class="hidden md:flex gap-8 text-[13px] font-bold tracking-wide text-gray-300">
+            <a href="#hero" class="hover:text-sony-blue transition-colors">HOME</a>
+            <a href="#hardware" class="hover:text-sony-blue transition-colors">HARDWARE</a>
+            <a href="#games" class="hover:text-sony-blue transition-colors">GAMES</a>
+        </div>
+        <button class="bg-white text-black px-5 py-1.5 rounded-full text-xs font-bold hover:scale-105 transition-transform">Sign In</button>
+    </nav>
+
+    <section id="hero" class="relative h-screen w-full overflow-hidden flex items-center px-6 md:px-20">
+        <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover opacity-60">
+            <source src="https://assets.mixkit.co/videos/preview/mixkit-abstract-technology-blue-circuit-board-loop-video-31367-large.mp4" type="video/mp4">
+        </video>
+        <div class="absolute inset-0 bg-gradient-to-r from-black via-black/60 to-transparent z-10"></div>
+
+        <div class="relative z-20 max-w-4xl pt-20">
+            <span class="text-sony-blue font-bold tracking-[0.2em] text-sm uppercase mb-4 block">The Next Generation</span>
+            <h1 class="text-7xl md:text-9xl font-display uppercase leading-none text-glow">
+                Play Has <br> No Limits
+            </h1>
+            <p class="text-gray-300 text-lg md:text-xl max-w-xl mt-6 leading-relaxed border-l-4 border-sony-blue pl-6">
+                Experience lightning-fast loading, deeper immersion with haptic feedback, adaptive triggers, and 3D Audio.
+            </p>
+            <div class="flex gap-4 mt-8">
+                <a href="#hardware" class="bg-white text-black px-8 py-4 rounded-full font-bold text-sm hover:bg-sony-blue hover:text-white transition-all">
+                    Explore Console
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section id="hardware" class="py-32 bg-white text-black relative z-20">
+        <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+            
+            <div class="space-y-8">
+                <h2 class="text-5xl md:text-7xl font-display uppercase tracking-tight text-black">
+                    Lightning <span class="text-sony-blue">Speed</span>
+                </h2>
+                <p class="text-gray-600 text-lg leading-relaxed">
+                    Harness the might of a custom CPU, GPU, and SSD with Integrated I/O that rewrite the rules of what a PlayStation console can do.
+                </p>
+                
+                <div class="grid grid-cols-2 gap-8 pt-4">
+                    <div class="group">
+                        <i data-lucide="zap" class="w-8 h-8 text-sony-blue mb-2"></i>
+                        <h3 class="font-bold text-xl">Ray Tracing</h3>
+                        <p class="text-sm text-gray-500">Realistic shadows & reflections.</p>
+                    </div>
+                    <div class="group">
+                        <i data-lucide="monitor" class="w-8 h-8 text-sony-blue mb-2"></i>
+                        <h3 class="font-bold text-xl">4K-TV Gaming</h3>
+                        <p class="text-sm text-gray-500">120Hz output on 4K displays.</p>
+                    </div>
+                    <div class="group">
+                        <i data-lucide="hard-drive" class="w-8 h-8 text-sony-blue mb-2"></i>
+                        <h3 class="font-bold text-xl">825GB SSD</h3>
+                        <p class="text-sm text-gray-500">Ultra-high speed storage.</p>
+                    </div>
+                    <div class="group">
+                        <i data-lucide="headphones" class="w-8 h-8 text-sony-blue mb-2"></i>
+                        <h3 class="font-bold text-xl">3D Audio</h3>
+                        <p class="text-sm text-gray-500">Tempest 3D AudioTech.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="relative flex justify-center">
+                
+                <img src="https://gmedia.playstation.com/is/image/SIEPDC/ps5-slim-disc-console-featured-hardware-image-block-01-en-13nov23?$1600px$" 
+                     id="console-img" 
+                     class="w-full max-w-md object-contain drop-shadow-2xl transition-transform duration-1000 translate-y-20 opacity-0">
+            </div>
+        </div>
+    </section>
+
+    <section id="games" class="py-32 bg-[#001f4d] relative overflow-hidden">
+        <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#fff 1px, transparent 1px); background-size: 30px 30px;"></div>
+
+        <div class="max-w-7xl mx-auto px-6 relative z-10">
+            <div class="mb-16 text-center">
+                <h2 class="text-5xl md:text-7xl font-display uppercase text-white">
+                    Stunning <span class="text-blue-400">Games</span>
+                </h2>
+                <p class="text-blue-200 mt-4 text-lg">Exclusive titles you can only play on PlayStation 5.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="group relative aspect-[3/4] overflow-hidden rounded-2xl cursor-pointer">
+                    <img src="https://gmedia.playstation.com/is/image/SIEPDC/stellar-blade-keyart-01-en-06dec23?$1200px$" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
+                        <h3 class="text-3xl font-display uppercase">Stellar Blade</h3>
+                        <button class="mt-4 bg-white text-black px-6 py-2 rounded-full font-bold text-sm">View Game</button>
+                    </div>
+                </div>
+
+                <div class="group relative aspect-[3/4] overflow-hidden rounded-2xl cursor-pointer">
+                    <img src="https://gmedia.playstation.com/is/image/SIEPDC/god-of-war-ragnarok-keyart-01-en-07sep21?$1200px$" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
+                        <h3 class="text-3xl font-display uppercase">God of War Ragnarök</h3>
+                        <button class="mt-4 bg-white text-black px-6 py-2 rounded-full font-bold text-sm">View Game</button>
+                    </div>
+                </div>
+
+                <div class="group relative aspect-[3/4] overflow-hidden rounded-2xl cursor-pointer">
+                    <img src="https://gmedia.playstation.com/is/image/SIEPDC/ghost-of-tsushima-directors-cut-hero-banner-desktop-01-en-29jun21?$1600px$" class="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-end p-8">
+                        <h3 class="text-3xl font-display uppercase">Ghost of Tsushima</h3>
+                        <button class="mt-4 bg-white text-black px-6 py-2 rounded-full font-bold text-sm">View Game</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-black py-12 border-t border-white/10 text-center text-gray-500 text-sm">
+        <p>© 2026 Sony Interactive Entertainment Inc. All rights reserved.</p>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Simple Console Reveal Animation
+        gsap.to("#console-img", {
+            scrollTrigger: {
+                trigger: "#hardware",
+                start: "top center",
+                end: "center center",
+                scrub: 1
+            },
+            y: 0,
+            opacity: 1
+        });
+    </script>
+</body>
+</html>

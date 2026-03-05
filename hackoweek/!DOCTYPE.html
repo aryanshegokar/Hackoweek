@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+&nbsp;   <meta charset="UTF-8">
+
+&nbsp;   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+&nbsp;   <title>Aryan Shegokar | Portfolio</title>
+
+&nbsp;   <style>
+
+&nbsp;       /\* THEME: Apple Corporate / Luxury Minimalist 
+
+&nbsp;          FONT: Inter/Helvetica for that clean, neutral look.
+
+&nbsp;       \*/
+
+&nbsp;       :root {
+
+&nbsp;           --bg-color: #f5f5f7; /\* Apple's off-white gray \*/
+
+&nbsp;           --text-main: #1d1d1f; /\* Almost black \*/
+
+&nbsp;           --text-light: #86868b; /\* Apple's subtle gray \*/
+
+&nbsp;           --accent: #0071e3; /\* Apple Blue for links \*/
+
+&nbsp;           --card-bg: #ffffff;
+
+&nbsp;       }
+
+
+
+&nbsp;       \* {
+
+&nbsp;           margin: 0;
+
+&nbsp;           padding: 0;
+
+&nbsp;           box-sizing: border-box;
+
+&nbsp;           font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+&nbsp;       }
+
+
+
+&nbsp;       body {
+
+&nbsp;           background-color: var(--bg-color);
+
+&nbsp;           color: var(--text-main);
+
+&nbsp;           line-height: 1.6;
+
+&nbsp;           -webkit-font-smoothing: antialiased;
+
+&nbsp;       }
+
+
+
+&nbsp;       /\* CONTAINER \*/
+
+&nbsp;       .container {
+
+&nbsp;           max-width: 980px;
+
+&nbsp;           margin: 0 auto;
+
+&nbsp;           padding: 40px 20px;
+
+&nbsp;       }
+
+
+
+&nbsp;       /\* HEADER / HERO \*/
+
+&nbsp;       header {
+
+&nbsp;           padding: 100px 0 80px 0;
+
+&nbsp;           animation: fadeIn 1.5s ease-out;
+
+&nbsp;       }
+
+
+
+&nbsp;       h1 {
+
+&nbsp;           font-size: 48px;
+
+&nbsp;           font-weight: 600;
+
+&nbsp;           letter-spacing: -0.02em;
+
+&nbsp;           margin-bottom: 10px;
+
+&nbsp;       }
+
+
+
+&nbsp;       .tagline {
+
+&nbsp;           font-size: 24px;
+
+&nbsp;           color: var(--text-light);
+
+&nbsp;           font-weight: 400;
+
+&nbsp;       }
+
+
+
+&nbsp;       /\* SECTIONS GENERAL \*/
+
+&nbsp;       section {
+
+&nbsp;           margin-bottom: 80px;
+
+&nbsp;       }
+
+
+
+&nbsp;       h2 {
+
+&nbsp;           font-size: 32px;
+
+&nbsp;           font-weight: 600;
+
+&nbsp;           margin-bottom: 30px;
+
+&nbsp;           letter-spacing: -0.01em;
+
+&nbsp;       }
+
+
+
+&nbsp;       /\* GRID FOR CARDS \*/
+
+&nbsp;       .grid {
+
+&nbsp;           display: grid;
+
+&nbsp;           grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+
+&nbsp;           gap: 20px;
+
+&nbsp;       }
+
+
+
+&nbsp;       .card {
+
+&nbsp;           background: var(--card-bg);
+
+&nbsp;           padding: 30px;
+
+&nbsp;           border-radius: 18px;
+
+&nbsp;           box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+
+&nbsp;           transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+&nbsp;       }
+
+
+
+&nbsp;       .card:hover {
+
+&nbsp;           transform: translateY(-5px);
+
+&nbsp;           box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+
+&nbsp;       }
+
+
+
+&nbsp;       .card h3 {
+
+&nbsp;           font-size: 20px;
+
+&nbsp;           margin-bottom: 8px;
+
+&nbsp;       }
+
+
+
+&nbsp;       .card p {
+
+&nbsp;           color: var(--text-light);
+
+&nbsp;           font-size: 15px;
+
+&nbsp;       }
+
+
+
+&nbsp;       .meta {
+
+&nbsp;           font-size: 13px;
+
+&nbsp;           color: var(--text-light);
+
+&nbsp;           margin-bottom: 15px;
+
+&nbsp;           text-transform: uppercase;
+
+&nbsp;           letter-spacing: 0.05em;
+
+&nbsp;           font-weight: 600;
+
+&nbsp;       }
+
+
+
+&nbsp;       /\* PROJECT SPECIFIC \*/
+
+&nbsp;       .tech-stack {
+
+&nbsp;           margin-top: 15px;
+
+&nbsp;           font-size: 13px;
+
+&nbsp;           color: var(--accent);
+
+&nbsp;           font-weight: 500;
+
+&nbsp;       }
+
+
+
+&nbsp;       /\* LINKS \*/
+
+&nbsp;       .links a {
+
+&nbsp;           text-decoration: none;
+
+&nbsp;           color: var(--accent);
+
+&nbsp;           font-size: 18px;
+
+&nbsp;           margin-right: 25px;
+
+&nbsp;           transition: opacity 0.2s;
+
+&nbsp;       }
+
+&nbsp;       .links a:hover {
+
+&nbsp;           opacity: 0.7;
+
+&nbsp;       }
+
+
+
+&nbsp;       /\* ANIMATION \*/
+
+&nbsp;       @keyframes fadeIn {
+
+&nbsp;           from { opacity: 0; transform: translateY(10px); }
+
+&nbsp;           to { opacity: 1; transform: translateY(0); }
+
+&nbsp;       }
+
+
+
+&nbsp;       /\* RESPONSIVE \*/
+
+&nbsp;       @media (max-width: 600px) {
+
+&nbsp;           h1 { font-size: 36px; }
+
+&nbsp;           .tagline { font-size: 20px; }
+
+&nbsp;       }
+
+&nbsp;   </style>
+
+</head>
+
+<body>
+
+
+
+&nbsp;   <div class="container">
+
+&nbsp;       
+
+&nbsp;       <header>
+
+&nbsp;           <h1>Aryan Shegokar.</h1>
+
+&nbsp;           <p class="tagline">Engineering Design \& Interfaces.</p>
+
+&nbsp;       </header>
+
+
+
+&nbsp;       <section>
+
+&nbsp;           <h2>Education</h2>
+
+&nbsp;           <div class="grid">
+
+&nbsp;               <div class="card">
+
+&nbsp;                   <div class="meta">Current</div>
+
+&nbsp;                   <h3>B.Tech Computer Science</h3>
+
+&nbsp;                   <p>SIT Nagpur</p>
+
+&nbsp;                   <p style="margin-top:10px; font-size:14px;">First Year \&middot; Semester 2</p>
+
+&nbsp;               </div>
+
+&nbsp;               <div class="card">
+
+&nbsp;                   <div class="meta">Foundation</div>
+
+&nbsp;                   <h3>Higher Secondary</h3>
+
+&nbsp;                   <p>Grade 12: <span style="color:#1d1d1f; font-weight:600;">86.6%</span></p>
+
+&nbsp;                   <p>Grade 10: <span style="color:#1d1d1f; font-weight:600;">93.5%</span></p>
+
+&nbsp;               </div>
+
+&nbsp;           </div>
+
+&nbsp;       </section>
+
+
+
+&nbsp;       <section>
+
+&nbsp;           <h2>Selected Work</h2>
+
+&nbsp;           <div class="grid">
+
+&nbsp;               <div class="card">
+
+&nbsp;                   <h3>Restaurant UI</h3>
+
+&nbsp;                   <p>A digital reservation system and interactive menu designed to enhance brand identity and customer accessibility.</p>
+
+&nbsp;                   <div class="tech-stack">HTML \&middot; CSS \&middot; Frontend Design</div>
+
+&nbsp;               </div>
+
+&nbsp;               
+
+&nbsp;               <div class="card" style="opacity: 0.6;">
+
+&nbsp;                   <h3>Upcoming Project</h3>
+
+&nbsp;                   <p>Currently in development. Focusing on Python automation and data logic.</p>
+
+&nbsp;                   <div class="tech-stack">Python \&middot; Logic</div>
+
+&nbsp;               </div>
+
+&nbsp;           </div>
+
+&nbsp;       </section>
+
+
+
+&nbsp;       <section>
+
+&nbsp;           <h2>Technical Proficiency</h2>
+
+&nbsp;           <div class="card" style="padding: 40px;">
+
+&nbsp;               <p style="font-size: 18px; line-height: 1.8; color: var(--text-main);">
+
+&nbsp;                   <span style="color:var(--text-light);">Languages:</span>\&nbsp;\&nbsp; Python, C, HTML5, CSS3<br>
+
+&nbsp;                   <span style="color:var(--text-light);">Focus:</span>\&nbsp;\&nbsp; Frontend Architecture, UI Logic
+
+&nbsp;               </p>
+
+&nbsp;           </div>
+
+&nbsp;       </section>
+
+
+
+&nbsp;       <section>
+
+&nbsp;           <h2>Connect</h2>
+
+&nbsp;           <div class="links">
+
+&nbsp;               <a href="mailto:your-email@example.com">Email</a>
+
+&nbsp;               <a href="#">LinkedIn</a>
+
+&nbsp;               <a href="#">GitHub</a>
+
+&nbsp;           </div>
+
+&nbsp;       </section>
+
+
+
+&nbsp;       <footer style="margin-top: 100px; color: var(--text-light); font-size: 12px;">
+
+&nbsp;           <p>\&copy; 2026 Dolly Singh. Designed in Nagpur.</p>
+
+&nbsp;       </footer>
+
+
+
+&nbsp;   </div>
+
+
+
+</body>
+
+</html>
+

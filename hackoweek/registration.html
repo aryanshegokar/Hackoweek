@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nintendo Switch 2 | Official Pre-Order & Game Hub</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap');
+
+        :root {
+            --nin-red: #e60012;
+            --nin-blue: #049cd8;
+            --nin-green: #43b02a;
+            --nin-yellow: #fbd000;
+            --off-white: #f8f8f8;
+            --text-dark: #2c2c2c;
+        }
+
+        body {
+            background-color: var(--off-white);
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* Top Branding Bar */
+        .top-nav {
+            background: var(--nin-red);
+            padding: 15px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .live-counter {
+            background: rgba(0,0,0,0.2);
+            color: white;
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+
+        /* Main Portal Wrapper */
+        .portal-container {
+            max-width: 1100px;
+            margin: 30px auto;
+            background: white;
+            border-radius: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.05);
+            overflow: hidden;
+            border: 1px solid #eee;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--nin-red) 60%, #ff4d4d);
+            padding: 60px 40px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hero-text h1 { font-size: 3.5rem; margin: 0; line-height: 1; }
+        .hero-text p { font-size: 1.2rem; opacity: 0.9; margin-top: 10px; }
+
+        /* Form Content */
+        .content { padding: 50px; }
+
+        .form-section { margin-bottom: 50px; }
+        .section-header {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--nin-red);
+            margin-bottom: 25px;
+            border-left: 8px solid var(--nin-red);
+            padding-left: 15px;
+        }
+
+        /* Grid System */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .item-card {
+            border: 2px solid #f0f0f0;
+            border-radius: 25px;
+            padding: 20px;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            position: relative;
+            background: white;
+        }
+
+        .item-card:hover { 
+            border-color: var(--nin-blue); 
+            transform: scale(1.03);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+
+        .item-card input { position: absolute; top: 20px; right: 20px; transform: scale(1.4); accent-color: var(--nin-red); }
+        
+        .badge {
+            font-size: 0.6rem;
+            font-weight: 900;
+            padding: 4px 8px;
+            border-radius: 5px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+
+        .badge-new { background: var(--nin-red); color: white; }
+        .badge-game { background: var(--nin-blue); color: white; }
+        .badge-acc { background: var(--nin-green); color: white; }
+
+        .item-name { font-weight: bold; font-size: 1rem; display: block; margin: 5px 0; }
+        .item-price { color: var(--nin-red); font-weight: 900; font-size: 1.1rem; }
+        .item-desc { font-size: 0.75rem; color: #777; margin-top: 8px; line-height: 1.4; }
+
+        /* Sticky Pricing Bar */
+        .checkout-bar {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 600px;
+            background: #222;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 100px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 2000;
+        }
+
+        .total-amount { font-size: 1.5rem; font-weight: 900; color: var(--nin-yellow); }
+
+        .btn-reserve {
+            background: var(--nin-red);
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            border-radius: 50px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-reserve:hover { background: #ff1a2b; transform: scale(1.05); }
+
+        /* Legal */
+        .ipr-footer {
+            padding: 40px;
+            text-align: center;
+            font-size: 0.7rem;
+            color: #aaa;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+
+<div class="top-nav">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Nintendo_Switch_logo%2C_square.png" height="30" style="filter: brightness(0) invert(1);">
+    <br>
+    <div class="live-counter">🔴 LIVE: <span id="regCount">14,202</span> Fans Registered Currently</div>
+</div>
+
+<div class="portal-container">
+    <div class="hero">
+        <div class="hero-text">
+            <h1>Switch 2<br>Is Coming!</h1>
+            <p>Secure your 2026 Phase-1 Hardware Unit.</p>
+        </div>
+        <img src="https://www.pngplay.com/wp-content/uploads/12/Mario-No-Background.png" height="200" style="filter: drop-shadow(10px 10px 0px rgba(0,0,0,0.1));">
+    </div>
+
+    <form class="content" id="megaForm">
+        <div class="form-section">
+            <div class="section-header">1. User Passport</div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <input type="text" placeholder="Your Mii Name" style="padding:15px; border-radius:15px; border:2px solid #eee;" required>
+                <input type="email" placeholder="Nintendo Account Email" style="padding:15px; border-radius:15px; border:2px solid #eee;" required>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="section-header">2. Select Your Console</div>
+            <div class="bento-grid">
+                <label class="item-card">
+                    <input type="radio" name="base" value="399" checked>
+                    <span class="badge badge-new">Standard</span>
+                    <span class="item-name">Switch 2 Base</span>
+                    <span class="item-price">$399</span>
+                    <p class="item-desc">8" LCD, 256GB Storage, Standard Dock.</p>
+                </label>
+                <label class="item-card">
+                    <input type="radio" name="base" value="499">
+                    <span class="badge badge-new" style="background:var(--nin-blue)">Pro Mode</span>
+                    <span class="item-name">Switch 2 Pro</span>
+                    <span class="item-price">$499</span>
+                    <p class="item-desc">8" OLED, 512GB Storage, 4K AI-Upscaling Dock.</p>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <div class="section-header">3. Add-Ons & Tech</div>
+            <div class="bento-grid">
+                <label class="item-card">
+                    <input type="checkbox" class="addon" value="65">
+                    <span class="badge badge-acc">Official</span>
+                    <span class="item-name">Switch Eye (Camera)</span>
+                    <span class="item-price">$65</span>
+                    <p class="item-desc">4K Gesture sensor for motion control games.</p>
+                </label>
+                <label class="item-card">
+                    <input type="checkbox" class="addon" value="79">
+                    <span class="badge badge-acc">Official</span>
+                    <span class="item-name">Joy-Con 2 (Magnetic)</span>
+                    <span class="item-price">$79</span>
+                    <p class="item-desc">No-drift hall effect sensors. Magnetic snap.</p>
+                </label>
+                <label class="item-card">
+                    <input type="checkbox" class="addon" value="110">
+                    <span class="badge badge-acc">Storage</span>
+                    <span class="item-name">2TB microSD Express</span>
+                    <span class="item-price">$110</span>
+                    <p class="item-desc">High-speed loading for AAA 4K titles.</p>
+                </label>
+            </div>
+        </div>
+
+        <div class="form-section" style="margin-bottom: 100px;">
+            <div class="section-header">4. Launch Titles (Top 5)</div>
+            <div class="bento-grid">
+                <label class="item-card">
+                    <input type="checkbox" class="addon" value="70">
+                    <span class="badge badge-game">Mario</span>
+                    <span class="item-name">Super Mario Lumina</span>
+                    <span class="item-price">$70</span>
+                    <p class="item-desc">The next 3D Mario masterpiece.</p>
+                </label>
+                <label class="item-card">
+                    <input type="checkbox" class="addon" value="70">
+                    <span class="badge badge-game">Zelda</span>
+                    <span class="item-name">Legend of Zelda: Echoes</span>
+                    <span class="item-price">$70</span>
+                    <p class="item-desc">Fully optimized 4K Hyrule adventure.</p>
+                </label>
+                <label class="item-card">
+                    <input type="checkbox" class="addon" value="70">
+                    <span class="badge badge-game">Metroid</span>
+                    <span class="item-name">Metroid Prime 4</span>
+                    <span class="item-price">$70</span>
+                    <p class="item-desc">The long-awaited Samus return.</p>
+                </label>
+                <label class="item-card">
+                    <input type="checkbox" class="addon" value="70">
+                    <span class="badge badge-game">Pokémon</span>
+                    <span class="item-name">Pokémon Azure</span>
+                    <span class="item-price">$70</span>
+                    <p class="item-desc">The first Gen 10 Open World RPG.</p>
+                </label>
+                <label class="item-card">
+                    <input type="checkbox" class="addon" value="70">
+                    <span class="badge badge-game">Smash</span>
+                    <span class="item-name">Smash Ultimate Deluxe</span>
+                    <span class="item-price">$70</span>
+                    <p class="item-desc">All DLC + 10 New Fighters included.</p>
+                </label>
+            </div>
+        </div>
+    </form>
+
+    <div class="ipr-footer">
+        <strong>Intellectual Property Rights (IPR) & Legal Notice:</strong><br>
+        This portal is a simulated web application developed for academic purposes (SIT Nagpur B.Tech CSE). <br>
+        Nintendo Switch™, Mario™, The Legend of Zelda™, and all related properties are trademarks of Nintendo Co., Ltd. <br>
+        This site is not affiliated with, endorsed by, or sponsored by Nintendo. No real currency is collected.
+    </div>
+</div>
+
+<div class="checkout-bar">
+    <div>
+        <small style="opacity:0.7">ESTIMATED TOTAL</small><br>
+        <span class="total-amount" id="total">$399</span>
+    </div>
+    <button type="submit" form="megaForm" class="btn-reserve">CONFIRM ORDER ➔</button>
+</div>
+
+<script>
+    const allInputs = document.querySelectorAll('input[type="radio"], input[type="checkbox"]');
+    const totalDisplay = document.getElementById('total');
+    const countDisplay = document.getElementById('regCount');
+
+    // 1. Live Counter Simulation
+    let count = 14202;
+    setInterval(() => {
+        count += Math.floor(Math.random() * 5);
+        countDisplay.innerText = count.toLocaleString();
+    }, 3000);
+
+    // 2. Real-time Pricing Logic
+    function calculate() {
+        let total = 0;
+        allInputs.forEach(input => {
+            if(input.checked) total += parseInt(input.value);
+        });
+        totalDisplay.innerText = `$${total}`;
+    }
+
+    allInputs.forEach(i => i.addEventListener('change', calculate));
+
+    // 3. Form Submission
+    document.getElementById('megaForm').onsubmit = (e) => {
+        e.preventDefault();
+        alert("WAHOO! Your registration is complete. You are now in the queue for the 2026 Batch!");
+    };
+</script>
+
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Harsh & Aryan | Travel Blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        :root {
+            --accent: #ffcc00;
+            --bg: #0a0a0a;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            margin: 0;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: #eee;
+            line-height: 1.7;
+        }
+
+        /* ===== NAVIGATION ===== */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            padding: 20px 0;
+            text-align: center;
+            z-index: 1000;
+            border-bottom: 1px solid #222;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            transition: 0.3s;
+        }
+
+        nav a:hover { color: var(--accent); }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            height: 100vh;
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
+                        url("https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&w=2070&auto=format&fit=crop") no-repeat center;
+            background-size: cover;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .hero h1 { font-size: clamp(3rem, 10vw, 6rem); margin: 0; letter-spacing: -2px; }
+        .hero p { font-size: 1.2rem; color: var(--accent); margin-top: 10px; }
+
+        /* ===== CONTENT STRUCTURE ===== */
+        .section { padding: 80px 10%; text-align: center; }
+        
+        h2 { font-size: 2.5rem; margin-bottom: 40px; }
+
+        .card {
+            background: var(--glass);
+            padding: 30px;
+            margin: 40px auto;
+            max-width: 850px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .img-container {
+            width: 100%;
+            min-height: 300px;
+            background: #1a1a1a;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+
+        .card img {
+            width: 100%;
+            height: 450px;
+            object-fit: cover;
+            display: block;
+        }
+
+        /* ===== SLIDER ===== */
+        .slider-box {
+            max-width: 900px;
+            margin: 0 auto;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #1a1a1a;
+        }
+
+        #slide { width: 100%; height: 500px; object-fit: cover; transition: opacity 0.5s ease; }
+
+        /* ===== FORM ===== */
+        input, textarea {
+            width: 100%;
+            max-width: 500px;
+            padding: 15px;
+            margin: 10px 0;
+            background: #111;
+            border: 1px solid #333;
+            color: white;
+            border-radius: 4px;
+        }
+
+        button {
+            background: var(--accent);
+            color: black;
+            padding: 15px 40px;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        footer { padding: 40px; background: #000; border-top: 1px solid #222; text-align: center; }
+
+        @media (max-width: 768px) {
+            .card img, #slide { height: 300px; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#harsh">Harsh</a>
+        <a href="#aryan">Aryan</a>
+        <a href="#contact">Contact</a>
+    </nav>
+
+    <header id="home" class="hero">
+        <h1>Harsh & Aryan</h1>
+        <p>The Art of Exploration</p>
+    </header>
+
+    <main>
+        <section class="section">
+            <h2>Latest Expeditions</h2>
+            <div class="slider-box">
+                <img id="slide" src="expedition1.jpg" alt="Expedition">
+            </div>
+        </section>
+
+        <section id="harsh" class="section">
+            <article class="card">
+                <div class="img-container">
+                    <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2070&auto=format&fit=crop" alt="Harsh in the Mountains">
+                </div>
+                <h3>Harsh: Peak Performance</h3>
+                <p>
+                    Harsh focuses on the raw intensity of nature. Specializing in mountain trekking and wilderness cinematography, 
+                    his stories are about the struggle against the elements and the reward of the summit.
+                </p>
+                <a href="#aryan" style="color:var(--accent); text-decoration:none;">View Aryan's Chronicles →</a>
+            </article>
+        </section>
+
+        <section id="aryan" class="section">
+            <article class="card">
+                <div class="img-container">
+                    <img src="aryan-city.jpg" alt="Aryan in the City">
+                </div>
+                <h3>Aryan: Urban Pulse</h3>
+                <p>
+                    Aryan explores the soul of the modern world. His narratives dive deep into the architecture, 
+                    street food, and hidden subcultures of global cities. For Aryan, travel is about the 
+                    people and the stories that exist within the concrete jungle.
+                </p>
+                <a href="#harsh" style="color:var(--accent); text-decoration:none;">Back to Harsh's Peak ←</a>
+            </article>
+        </section>
+
+        <section id="contact" class="section">
+            <h2>Connect With Us</h2>
+            <form>
+                <input type="text" placeholder="Name" required><br>
+                <input type="email" placeholder="Email" required><br>
+                <textarea rows="5" placeholder="Message"></textarea><br>
+                <button type="submit">Send Message</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>© 2026 Harsh & Aryan | Travel Blog</p>
+    </footer>
+
+    <script>
+        // Updated Image List for Local JPGs
+        const imageList = [
+            "expedition1.jpg",
+            "expedition2.jpg",
+            "expedition3.jpg"
+        ];
+
+        let currentIndex = 0;
+        const slideImg = document.getElementById("slide");
+
+        function rotateImage() {
+            currentIndex = (currentIndex + 1) % imageList.length;
+            slideImg.style.opacity = "0.5";
+            setTimeout(() => {
+                slideImg.src = imageList[currentIndex];
+                slideImg.style.opacity = "1";
+            }, 300);
+        }
+
+        setInterval(rotateImage, 5000);
+    </script>
+
+</body>
+</html>

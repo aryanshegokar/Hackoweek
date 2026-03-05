@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Aryan's Portfolio</title>
+    <style>
+        /* Black and Gold Theme */
+        :root {
+            --gold: #d4af37;
+            --dark-gold: #aa8a2e;
+            --black: #0a0a0a;
+            --dark-grey: #1a1a1a;
+            --text-light: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--black);
+            color: var(--text-light);
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        /* Particle Canvas Styling */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            top: 0;
+            left: 0;
+        }
+
+        .header {
+            text-align: center;
+            background-color: var(--black);
+            border-bottom: 2px solid var(--gold);
+            padding: 40px 20px;
+        }
+
+        .header h1 {
+            color: var(--gold);
+            margin: 0;
+            font-size: 2.5em;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .header p {
+            color: var(--text-light);
+            font-style: italic;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 900px;
+            margin: 30px auto;
+            background-color: rgba(26, 26, 26, 0.9); /* Slight transparency for particles */
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
+        }
+
+        h2 {
+            color: var(--gold);
+            border-bottom: 1px solid var(--gold);
+            padding-bottom: 10px;
+            margin-top: 30px;
+        }
+
+        p, ul {
+            line-height: 1.8;
+            color: #cccccc;
+        }
+
+        b {
+            color: var(--gold);
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            background-color: var(--dark-grey);
+            border-top: 1px solid var(--gold);
+            color: var(--gold);
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="particles-js"></div>
+
+    <div class="header">
+        <h1>Aryan</h1>
+        <p>Student | Creative Writer | Social Media Manager</p>
+    </div>
+
+    <div class="container">
+
+        <div class="section">
+            <h2>About Me</h2>
+            <p>
+                I am a college student passionate about creativity, storytelling, and digital media.
+                I enjoy writing, content creation, and managing social media platforms.
+                I believe in continuous learning and personal growth.
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>Education</h2>
+            <ul>
+                <li>Higher Secondary Certificate (HSC)</li>
+                <li>Currently pursuing undergraduate studies</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Skills</h2>
+            <ul>
+                <li>Creative Writing</li>
+                <li>Content Creation</li>
+                <li>Social Media Management</li>
+                <li>Basic HTML & Web Design</li>
+                <li>Communication Skills</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Experience</h2>
+            <p>
+                <b>Social Media Manager (Volunteer)</b><br>
+                NGO working for mentally challenged and homeless children.
+            </p>
+        </div>
+
+        <div class="section">
+            <h2>Hobbies & Interests</h2>
+            <ul>
+                <li>Writing stories and novels</li>
+                <li>Reading books</li>
+                <li>Music</li>
+                <li>Traveling</li>
+                <li>Fitness</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Contact</h2>
+            <p>
+                Email: aryan.student@gmail.com <br>
+                Location: Nagpur
+            </p>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        <p>© 2026 Aryan</p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 80, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": "#d4af37" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.3, "random": true },
+                "size": { "value": 3, "random": true },
+                "line_linked": { "enable": true, "distance": 150, "color": "#d4af37", "opacity": 0.2, "width": 1 },
+                "move": { "enable": true, "speed": 1.5, "direction": "none", "random": false, "straight": false, "out_mode": "out", "bounce": false }
+            },
+            "interactivity": {
+                "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" } }
+            },
+            "retina_detect": true
+        });
+    </script>
+
+</body>
+</html>
