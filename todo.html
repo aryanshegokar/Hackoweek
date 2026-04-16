@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Todo App with AI Suggestions</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+*{box-sizing:border-box;font-family:'Segoe UI',sans-serif;margin:0;padding:0;}
+body{display:flex;justify-content:center;padding:20px;background:linear-gradient(270deg,#ff6a00,#ee0979,#00c6ff);background-size:600% 600%;animation:bg 15s infinite alternate;}
+@keyframes bg{0%{background-position:0% 50%}100%{background-position:100% 50%;}}
+.container{width:95%;max-width:960px;padding:25px;background: rgba(255,255,255,0.15);backdrop-filter: blur(25px);border-radius:20px;color:white;box-shadow:0 0 20px rgba(0,0,0,0.5);}
+#clock{text-align:center;margin-bottom:20px;font-size:26px;font-weight:bold;letter-spacing:1px;}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;}
+.button{padding:10px 16px;border:none;border-radius:12px;background:#ffffff30;color:white;font-weight:bold;cursor:pointer;transition:0.3s;box-shadow:4px 4px 12px rgba(0,0,0,0.2),-4px -4px 12px rgba(255,255,255,0.1);}
+.button:hover{transform: scale(1.05);box-shadow:inset 4px 4px 12px rgba(0,0,0,0.2), inset -4px -4px 12px rgba(255,255,255,0.1);}
+.input-box{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px;}
+input, select{padding:10px;border:none;border-radius:12px;outline:none;background: rgba(255,255,255,0.25);color:white;backdrop-filter: blur(10px);}
+.search{width:100%;margin-bottom:15px;padding:10px;}
+.kanban{display:flex;gap:15px;justify-content:space-between;margin-top:10px;flex-wrap:wrap;}
+.column{flex:1;min-width:250px;background: rgba(255,255,255,0.1);border-radius:15px;padding:15px;transition: all 0.3s ease;}
+.column h3{text-align:center;margin-bottom:12px;text-transform:uppercase;letter-spacing:1px;}
+ul{list-style:none;min-height:200px;}
+li{list-style:none;padding:12px;margin-bottom:10px;border-radius:12px;cursor:grab;background: rgba(255,255,255,0.2);display:flex;justify-content:space-between;align-items:center;transition: all 0.3s ease;}
+li:hover{transform: scale(1.02);box-shadow:0 6px 18px rgba(0,0,0,0.25);}
+.completed{text-decoration:line-through;opacity:0.6;}
+.low{border-left:6px solid #00ff9d;}
+.medium{border-left:6px solid #ffd700;}
+.high{border-left:6px solid #ff4b5c;}
+.progress{height:12px;background:rgba(255,255,255,0.2);border-radius:20px;margin-top:15px;overflow:hidden;}
+.bar{height:12px;width:0%;background: linear-gradient(90deg, #00ff9d, #ffd700, #ff4b5c);border-radius:20px;transition:0.5s;}
+.clear{width:100%;margin-top:15px;background:#ff4b5c;padding:12px;border-radius:12px;font-weight:bold;}
+.dark{background:#111;color:white;}
+.dark li{background:#333;}
+.charts{display:flex;gap:15px;flex-wrap:wrap;margin-top:20px;}
+.chart-box{flex:1;min-width:250px;background: rgba(255,255,255,0.15);padding:15px;border-radius:15px;}
+.suggestion{background: rgba(255,255,255,0.2);padding:12px;border-radius:12px;margin-top:20px;}
+.suggestion h3{text-align:center;margin-bottom:10px;}
+</style>
+</head>
+<body>
+<div class="container">
+<div id="clock"></div>
+<div class="header">
+<h2>Todo App + AI Suggestions</h2>
+<button class="button" onclick="toggleMode()">🌙</button>
+</div>
+
+<div class="input-box">
+<input id="taskInput" placeholder="Task">
+<input type="date" id="date">
+<input type="time" id="time">
+<select id="priority">
+<option value="low">Low</option>
+<option value="medium">Medium</option>
+<option value="high">High</option>
+</select>
+<button class="button" onclick="addTask()">Add</button>
+</div>
+
+<input class="search" id="search" placeholder="Search..." onkeyup="render()">
+
+<div class="kanban">
+<div class="column" id="todoColumn"><h3>To Do</h3><ul id="todoList"></ul></div>
+<div class="column" id="inProgressColumn"><h3>In Progress</h3><ul id="inProgressList"></ul></div>
+<div class="column" id="doneColumn"><h3>Done</h3><ul id="doneList"></ul></div>
+</div>
+
+<div class="progress"><div class="bar" id="bar"></div></div>
+<button class="clear" onclick="clearCompleted()">Clear Completed</button>
+
+<!-- AI Suggestion Panel -->
+<div class="suggestion">
+<h3>AI Task Suggestions</h3>
+<ul id="suggestionList"></ul>
+</div>
+
+<!-- Charts -->
+<div class="charts">
+<div class="chart-box"><canvas id="statusChart"></canvas></div>
+<div class="chart-box"><canvas id="priorityChart"></canvas></div>
+</div>
+
+</div>
+
+<script>
+// Storage
+let tasks = JSON.parse(localStorage.getItem("tasks")) || []
+
+// Clock
+function updateClock(){document.getElementById("clock").innerText=new Date().toLocaleTimeString()}
+setInterval(updateClock,1000)
+updateClock()
+function save(){localStorage.setItem("tasks",JSON.stringify(tasks))}
+
+// Add task
+function addTask(){
+let text=document.getElementById("taskInput").value
+let date=document.getElementById("date").value
+let time=document.getElementById("time").value
+let priority=document.getElementById("priority").value
+if(text==="")return
+tasks.push({text,date,time,priority,done:false,status:"todo"})
+document.getElementById("taskInput").value=""
+save(); render(); updateCharts(); updateSuggestions()
+}
+
+// Delete, Toggle, Clear
+function deleteTask(i){tasks.splice(i,1); save(); render(); updateCharts(); updateSuggestions()}
+function toggleTask(i){tasks[i].done=!tasks[i].done; tasks[i].status=tasks[i].done?"done":tasks[i].status; save(); render(); updateCharts(); updateSuggestions()}
+function clearCompleted(){tasks=tasks.filter(t=>!t.done); save(); render(); updateCharts(); updateSuggestions()}
+
+// Drag & drop
+let dragIndex=null
+function dragStart(i){dragIndex=i}
+function dropTask(i,column){tasks[dragIndex].status=column; save(); render(); updateCharts(); updateSuggestions()}
+
+// Render
+function render(){
+let search=document.getElementById("search").value.toLowerCase()
+let todoList=document.getElementById("todoList")
+let inProgressList=document.getElementById("inProgressList")
+let doneList=document.getElementById("doneList")
+todoList.innerHTML=""; inProgressList.innerHTML=""; doneList.innerHTML=""
+let doneCount=0
+tasks.filter(t=>t.text.toLowerCase().includes(search)).forEach((task,i)=>{
+if(task.done)doneCount++
+let li=document.createElement("li")
+li.className=task.priority
+li.draggable=true
+li.ondragstart=()=>dragStart(i)
+li.ondragover=e=>e.preventDefault()
+li.ondrop=()=>dropTask(i,task.status)
+li.innerHTML=`<span>${task.text}<br>📅 ${task.date||""} ⏰ ${task.time||""} | Priority: ${task.priority}</span>
+<div><input type="checkbox" ${task.done?"checked":""} onclick="toggleTask(${i})">
+<button onclick="deleteTask(${i})">❌</button></div>`
+if(task.status==="todo") todoList.appendChild(li)
+if(task.status==="inprogress") inProgressList.appendChild(li)
+if(task.status==="done") doneList.appendChild(li)
+})
+let percent=tasks.length?(doneCount/tasks.length)*100:0
+document.getElementById("bar").style.width=percent+"%"
+updateCharts(); updateSuggestions()
+}
+
+// Notifications
+function checkNotifications(){
+let now=new Date()
+tasks.forEach(t=>{
+if(t.date && t.time && !t.done){
+let taskTime=new Date(t.date+'T'+t.time)
+if(Math.abs(now-taskTime)<60000){new Notification("Todo Reminder",{body:t.text})}
+}})
+}
+if("Notification" in window && Notification.permission!=="granted"){Notification.requestPermission()}
+setInterval(checkNotifications,60000)
+
+// Dark mode
+function toggleMode(){document.body.classList.toggle("dark")}
+
+// Charts
+let statusChart, priorityChart
+function updateCharts(){
+let doneCount = tasks.filter(t=>t.done).length
+let pendingCount = tasks.length - doneCount
+let low = tasks.filter(t=>t.priority==="low").length
+let medium = tasks.filter(t=>t.priority==="medium").length
+let high = tasks.filter(t=>t.priority==="high").length
+
+if(!statusChart){
+statusChart = new Chart(document.getElementById('statusChart').getContext('2d'),{
+type:'doughnut',
+data:{labels:['Completed','Pending'],datasets:[{data:[doneCount,pendingCount],backgroundColor:['#00ff9d','#ff4b5c']}]},
+options:{responsive:true,plugins:{legend:{position:'bottom'}}}
+})
+} else {statusChart.data.datasets[0].data=[doneCount,pendingCount]; statusChart.update() }
+
+if(!priorityChart){
+priorityChart = new Chart(document.getElementById('priorityChart').getContext('2d'),{
+type:'bar',
+data:{labels:['Low','Medium','High'],datasets:[{label:'Tasks by Priority',data:[low,medium,high],backgroundColor:['#00ff9d','#ffd700','#ff4b5c']}]},
+options:{responsive:true,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,precision:0}}}
+})
+} else {priorityChart.data.datasets[0].data=[low,medium,high]; priorityChart.update()}
+}
+
+// AI Suggestions
+function updateSuggestions(){
+let suggestionList=document.getElementById("suggestionList")
+suggestionList.innerHTML=""
+let sorted=tasks.filter(t=>!t.done).sort((a,b)=>{
+// Priority: high>medium>low
+const prio={high:3,medium:2,low:1}
+if(prio[b.priority]-prio[a.priority]!==0) return prio[b.priority]-prio[a.priority]
+// Then by time
+let timeA=a.date&&a.time?new Date(a.date+'T'+a.time).getTime():Infinity
+let timeB=b.date&&b.time?new Date(b.date+'T'+b.time).getTime():Infinity
+return timeA-timeB
+})
+sorted.slice(0,5).forEach(t=>{
+let li=document.createElement("li")
+li.textContent=`[${t.priority.toUpperCase()}] ${t.text} ${t.date? "📅 "+t.date:""} ${t.time? "⏰ "+t.time:""}`
+suggestionList.appendChild(li)
+})
+}
+
+render()
+</script>
+</body>
+</html>

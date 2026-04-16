@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANKH.STUDIOS - Premium Image Gallery</title>
+    <link href="https://fonts.googleapis.com/css2?family=Arapey&family=Syne:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS VARIABLES */
+        :root {
+            --deep-black: #030303;
+            --background-dark: #0a0a0a;
+            --gilded-gold: #c5a059;
+            --glowing-gold: #e6c27a;
+            --soft-gold: #8c7343;
+            --card-bg: #0d0d0d;
+            --transition-smooth: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            --font-heading: 'Syne', sans-serif;
+            --font-body: 'Arapey', serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-select: none;
+            font-family: var(--font-body);
+        }
+
+        /* FIXED BACKGROUND GRADIENT */
+        #bg-gradient {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: radial-gradient(circle at top, #1a1a1a 0%, var(--deep-black) 100%);
+            z-index: -5;
+        }
+
+        body {
+            color: var(--gilded-gold);
+            overflow-x: hidden;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        h1, h2, h3, .company-name {
+            font-family: var(--font-heading);
+            letter-spacing: 0.2em;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        /* LIVE BACKGROUND (Canvas) */
+        #background-canvas {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -4;
+            pointer-events: none;
+        }
+
+        #ambient-dust {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -3;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .dust-particle {
+            position: absolute;
+            background: rgba(230, 194, 122, 0.6);
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* HEADER */
+        header {
+            position: fixed;
+            top: 0; left: 0; width: 100%;
+            padding: 25px 5vw;
+            background: linear-gradient(180deg, rgba(3,3,3,0.95) 0%, transparent 100%);
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        .company-name {
+            font-size: 1.6rem;
+            color: var(--gilded-gold);
+            text-shadow: 0 4px 15px rgba(197, 160, 89, 0.3);
+            letter-spacing: 0.4em;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        main {
+            padding: 100px 5vw 50px;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        /* POSTER GALLERY GRID */
+        #gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+            perspective: 1000px; /* Needed for the 3D tilt effect */
+        }
+
+        .gallery-card {
+            background-color: var(--card-bg);
+            border: 1px solid rgba(197, 160, 89, 0.15);
+            border-radius: 6px;
+            position: relative;
+            cursor: pointer;
+            transition: var(--transition-smooth); /* Restores smoothly on mouseleave */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            aspect-ratio: 2 / 3;
+            overflow: hidden;
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+
+        .gallery-card:hover {
+            border-color: rgba(197, 160, 89, 0.6);
+            box-shadow: 0 25px 50px rgba(197, 160, 89, 0.25);
+            /* Transform is now handled by JS for the holographic tilt */
+        }
+
+        .gallery-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition-smooth);
+            display: block;
+            pointer-events: none;
+        }
+
+        .gallery-card:hover img {
+            transform: scale(1.08); /* slightly higher scale to complement 3D tilt */
+        }
+
+        .card-title {
+            position: absolute;
+            bottom: 0; left: 0; width: 100%;
+            padding: 20px 15px;
+            background: linear-gradient(0deg, rgba(0,0,0,0.95) 0%, transparent 100%);
+            font-family: var(--font-heading);
+            text-align: center;
+            font-weight: bold;
+            letter-spacing: 0.15em;
+            color: var(--glowing-gold);
+            opacity: 0;
+            transform: translateY(10px) translateZ(30px); /* Pops out in 3D */
+            transition: var(--transition-smooth);
+            pointer-events: none;
+        }
+
+        .gallery-card:hover .card-title {
+            opacity: 1;
+            transform: translateY(0) translateZ(30px);
+        }
+
+        .gallery-card.dragging {
+            opacity: 0.2;
+            transform: scale(0.95) !important;
+            transition: var(--transition-smooth) !important;
+        }
+
+        /* HYBRID EDITOR / LIGHTBOX */
+        #lightbox {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: rgba(3,3,3,0.98);
+            z-index: 500;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 2vh 2vw;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        #lightbox.open {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lightbox-content {
+            display: flex;
+            width: 100%;
+            max-width: 1400px;
+            height: 90vh;
+            background: var(--background-dark);
+            border: 1px solid rgba(197, 160, 89, 0.2);
+            border-radius: 8px;
+            box-shadow: 0 0 60px rgba(0,0,0,1);
+        }
+
+        #close-lightbox {
+            position: absolute;
+            top: 25px; right: 30px;
+            font-size: 2rem;
+            color: var(--soft-gold);
+            cursor: pointer;
+            z-index: 10;
+            transition: var(--transition-smooth);
+            font-family: sans-serif;
+            font-weight: 300;
+        }
+        #close-lightbox:hover { color: var(--glowing-gold); }
+
+        #viewfinder {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            background: #050505;
+            position: relative;
+            cursor: grab;
+            border-right: 1px solid rgba(197, 160, 89, 0.1);
+        }
+
+        #viewfinder:active { cursor: grabbing; }
+
+        #image-wrapper {
+            position: relative;
+            display: inline-block;
+            transition: transform 0.1s ease-out;
+            pointer-events: none;
+        }
+
+        #lightbox-img {
+            max-width: 80vw;
+            max-height: 80vh;
+            display: block;
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            transition: filter 0.3s ease;
+        }
+
+        /* EDITOR PANEL */
+        #editor-panel {
+            width: 320px;
+            min-width: 320px;
+            background: #0a0a0a;
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 35px;
+            overflow-y: auto;
+        }
+
+        #editor-panel h3 {
+            font-size: 0.8rem;
+            color: var(--soft-gold);
+            margin-bottom: 15px;
+            border-bottom: 1px solid rgba(197, 160, 89, 0.2);
+            padding-bottom: 8px;
+        }
+
+        .editor-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group { 
+            display: grid; 
+            grid-template-columns: 1fr 1fr; 
+            gap: 10px; 
+        }
+
+        .filter-btn {
+            padding: 10px 0;
+            background: transparent;
+            border: 1px solid rgba(197, 160, 89, 0.3);
+            color: var(--gilded-gold);
+            cursor: pointer;
+            border-radius: 4px;
+            font-family: var(--font-heading);
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            transition: var(--transition-smooth);
+            text-align: center;
+        }
+
+        .filter-btn.full-width { grid-column: span 2; }
+        .filter-btn:hover, .filter-btn.active {
+            background: rgba(197, 160, 89, 0.1);
+            border-color: var(--glowing-gold);
+            color: var(--glowing-gold);
+        }
+
+        /* OVERLAYS UI */
+        .switch-label {
+            display: flex; justify-content: space-between; align-items: center;
+            color: var(--gilded-gold);
+            font-family: var(--font-heading);
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            margin-bottom: 15px;
+        }
+        .switch-input { display: none; }
+        .switch-slider {
+            width: 44px; height: 22px; background: #222;
+            border-radius: 20px; position: relative;
+            transition: var(--transition-smooth);
+            border: 1px solid rgba(197, 160, 89, 0.3);
+        }
+        .switch-slider:before {
+            content: ""; position: absolute;
+            width: 16px; height: 16px;
+            background: var(--soft-gold);
+            border-radius: 50%; top: 2px; left: 3px;
+            transition: var(--transition-smooth);
+        }
+        .switch-input:checked + .switch-slider {
+            background: rgba(197, 160, 89, 0.2);
+            border-color: var(--glowing-gold);
+        }
+        .switch-input:checked + .switch-slider:before {
+            background: var(--glowing-gold);
+            transform: translateX(20px);
+        }
+
+        .action-btn {
+            padding: 15px;
+            background: var(--gilded-gold);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            color: var(--deep-black);
+            font-family: var(--font-heading);
+            font-weight: bold;
+            letter-spacing: 0.15em;
+            transition: var(--transition-smooth);
+            font-size: 0.85rem;
+            margin-top: auto;
+        }
+
+        .action-btn:hover {
+            background: var(--glowing-gold);
+            box-shadow: 0 0 20px rgba(230, 194, 122, 0.3);
+        }
+
+        /* WATERMARK & FRAME */
+        .gilded-frame {
+            position: absolute;
+            top: 15px; left: 15px; right: 15px; bottom: 15px;
+            pointer-events: none;
+            display: none;
+            z-index: 5;
+            border: 2px solid rgba(197, 160, 89, 0.6);
+            outline: 1px solid rgba(197, 160, 89, 0.2);
+            outline-offset: 8px;
+        }
+
+        .aura-watermark {
+            position: absolute;
+            bottom: 25px; right: 25px;
+            pointer-events: none;
+            display: none;
+            z-index: 5;
+            font-size: 3rem; 
+            color: rgba(230, 194, 122, 0.9);
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(230, 194, 122, 0.5);
+            line-height: 1;
+        }
+
+        /* GOLD FOIL OVERLAY */
+        .gold-foil-layer {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(212,175,55,0) 0%, rgba(255,223,0,0.35) 50%, rgba(212,175,55,0) 100%);
+            background-size: 200% 200%;
+            mix-blend-mode: color-dodge;
+            pointer-events: none;
+            display: none;
+            z-index: 4;
+            animation: foilShimmer 4s infinite linear;
+        }
+
+        @keyframes foilShimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* FILTERS */
+        .filter-relic { filter: sepia(0.6) contrast(1.1) brightness(0.9); }
+        .filter-eclipse { filter: contrast(1.5) brightness(0.8) saturate(0.2); }
+        .filter-mirage { filter: contrast(1.1) blur(1px) saturate(1.5); }
+        .filter-anubis { filter: grayscale(1) contrast(1.6) brightness(0.9); }
+        .filter-osiris { filter: sepia(0.8) hue-rotate(90deg) saturate(1.8) brightness(0.85); }
+        .filter-ra { filter: sepia(0.4) contrast(1.2) brightness(1.15) saturate(1.4); }
+
+        @media (max-width: 900px) {
+            .lightbox-content { flex-direction: column; height: 95vh; }
+            #editor-panel { width: 100%; height: auto; border-left: none; border-top: 1px solid rgba(197, 160, 89, 0.2); flex-direction: row; flex-wrap: wrap; gap: 20px;}
+            .editor-section { flex: 1; min-width: 200px; }
+            #viewfinder { border-right: none; min-height: 50vh; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="bg-gradient"></div>
+    <canvas id="background-canvas"></canvas>
+    <div id="ambient-dust"></div>
+
+    <header>
+        <div class="company-name"><span>𓂀</span> A N K H . S T U D I O S</div>
+    </header>
+
+    <main>
+        <div id="gallery"></div>
+    </main>
+
+    <div id="lightbox">
+        <div class="lightbox-content">
+            <div id="close-lightbox">&#215;</div>
+            
+            <div id="viewfinder">
+                <div id="image-wrapper">
+                    <div class="gold-foil-layer"></div>
+                    <div class="gilded-frame"></div>
+                    <div class="aura-watermark">𓂀</div>
+                    <img src="" alt="View" id="lightbox-img">
+                </div>
+            </div>
+
+            <div id="editor-panel">
+                <div class="editor-section">
+                    <h3>AESTHETICS</h3>
+                    <div class="filter-group">
+                        <button class="filter-btn" data-filter="relic">Relic</button>
+                        <button class="filter-btn" data-filter="eclipse">Eclipse</button>
+                        <button class="filter-btn" data-filter="mirage">Mirage</button>
+                        <button class="filter-btn" data-filter="anubis">Anubis</button>
+                        <button class="filter-btn" data-filter="osiris">Osiris</button>
+                        <button class="filter-btn" data-filter="ra">Ra</button>
+                        <button class="filter-btn full-width" data-filter="reset">Clear Filters</button>
+                    </div>
+                </div>
+
+                <div class="editor-section">
+                    <h3>SIGILS & FRAMES</h3>
+                    <label class="switch-label">
+                        Pharaoh's Mark
+                        <input type="checkbox" class="switch-input" id="watermark-toggle">
+                        <span class="switch-slider"></span>
+                    </label>
+                    <label class="switch-label">
+                        Gilded Border
+                        <input type="checkbox" class="switch-input" id="frame-toggle">
+                        <span class="switch-slider"></span>
+                    </label>
+                    <label class="switch-label">
+                        Gold Foil Texture
+                        <input type="checkbox" class="switch-input" id="foil-toggle">
+                        <span class="switch-slider"></span>
+                    </label>
+                </div>
+
+                <div class="editor-section">
+                    <h3>OPTICS</h3>
+                    <div class="filter-group">
+                        <button class="filter-btn" id="zoom-in">Zoom In</button>
+                        <button class="filter-btn" id="zoom-out">Zoom Out</button>
+                        <button class="filter-btn" id="rotate-btn">Rotate</button>
+                        <button class="filter-btn" id="reset-view">Reset View</button>
+                    </div>
+                </div>
+
+                <button class="action-btn" id="export-btn">EXTRACT IMAGE</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const imageList = [
+            { id: 'gow', title: 'God of War' },
+            { id: 'yotei', title: 'Ghost of Yotei' },
+            { id: 'ghost', title: 'Ghost of Tsushima' },
+            { id: 'ff16', title: 'FFXVI' },
+            { id: 'gta6', title: 'GTA VI' },
+            { id: 'helldivers', title: 'Helldivers 2' },
+            { id: 'tlou', title: 'The Last of Us' },
+            { id: 'stellar', title: 'Stellar Blade' },
+            { id: 'spiderman', title: 'Spider-Man' },
+            { id: 'tomb', title: 'Tomb Raider' } /* Added the tomb image */
+        ];
+
+        const gallery = document.getElementById('gallery');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const viewfinder = document.getElementById('viewfinder');
+        const imageWrapper = document.getElementById('image-wrapper');
+
+        // Render Gallery Posters with Holographic Tilt Setup
+        imageList.forEach(imgData => {
+            const card = document.createElement('div');
+            card.className = 'gallery-card';
+            card.draggable = true;
+            card.dataset.id = imgData.id;
+            
+            const fallback = `https://via.placeholder.com/600x900/111/c5a059.jpg?text=${imgData.title.replace(/ /g, '+')}`;
+            
+            card.innerHTML = `
+                <img src="${imgData.id}.jpg" alt="${imgData.title}" onerror="this.onerror=null; this.src='${fallback}';">
+                <div class="card-title">${imgData.title}</div>
+            `;
+            
+            // --- HOLOGRAPHIC TILT PHYSICS ---
+            card.addEventListener('mousemove', (e) => {
+                if(card.classList.contains('dragging')) return;
+                
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left; 
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                // Calculate rotation (max 15 degrees)
+                const rotateX = ((y - centerY) / centerY) * -15; 
+                const rotateY = ((x - centerX) / centerX) * 15;
+                
+                card.style.transition = 'none'; // Snap instantly to mouse
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transition = 'var(--transition-smooth)'; // Smoothly return to flat
+                card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale(1)`;
+            });
+            
+            gallery.appendChild(card);
+        });
+
+        // Twinkling Background Glyphs
+        const canvas = document.getElementById('background-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let glyphs = [];
+        const chars = ['𓂀', '☥', '𓆣', '𓍹', '𓋹', '𓎛', '𓁧'];
+
+        function initCanvas() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+            glyphs = [];
+            
+            for(let i=0; i < 165; i++) {
+                spawnGlyph(true);
+            }
+        }
+
+        function spawnGlyph(initial = false) {
+            glyphs.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                size: Math.random() * 24 + 10, 
+                char: chars[Math.floor(Math.random() * chars.length)],
+                opacity: initial ? Math.random() * 0.4 : 0, 
+                targetOpacity: Math.random() * 0.4 + 0.1, 
+                life: 0,
+                maxLife: Math.random() * 100 + 50, 
+                fadingOut: false
+            });
+        }
+
+        function drawCanvas() {
+            ctx.clearRect(0, 0, width, height);
+            
+            for (let i = glyphs.length - 1; i >= 0; i--) {
+                let g = glyphs[i];
+                g.life++;
+
+                if (!g.fadingOut) {
+                    g.opacity += 0.012; 
+                    if (g.opacity >= g.targetOpacity || g.life > g.maxLife / 2) g.fadingOut = true;
+                } else {
+                    g.opacity -= 0.008; 
+                }
+
+                if (g.opacity <= 0 && g.fadingOut) {
+                    glyphs.splice(i, 1);
+                    spawnGlyph(); 
+                    continue;
+                }
+
+                ctx.font = `${g.size}px serif`;
+                ctx.fillStyle = `rgba(197, 160, 89, ${g.opacity})`;
+                ctx.fillText(g.char, g.x, g.y);
+            }
+            requestAnimationFrame(drawCanvas);
+        }
+
+        initCanvas();
+        drawCanvas();
+        window.addEventListener('resize', initCanvas);
+
+        // Ambient Dust Particles
+        function createDust() {
+            const p = document.createElement('div');
+            p.className = 'dust-particle';
+            p.style.width = p.style.height = `${Math.random() * 2.5 + 1.5}px`;
+            p.style.left = `${Math.random() * 100}vw`;
+            p.style.bottom = `-10px`;
+            const duration = Math.random() * 6 + 6;
+            p.style.animation = `floatUp ${duration}s ease-out forwards`;
+            document.getElementById('ambient-dust').appendChild(p);
+            setTimeout(() => p.remove(), duration * 1000);
+        }
+
+        const styleSheet = document.createElement("style");
+        styleSheet.innerText = `@keyframes floatUp { 0% { transform: translateY(0) scale(1); opacity: 0; } 20% { opacity: 0.8; } 100% { transform: translateY(-110vh); opacity: 0; } }`;
+        document.head.appendChild(styleSheet);
+        setInterval(createDust, 200);
+
+        // Drag and Drop Logic
+        let draggingCard = null;
+        gallery.addEventListener('dragstart', e => { draggingCard = e.target.closest('.gallery-card'); draggingCard?.classList.add('dragging'); });
+        gallery.addEventListener('dragend', () => { draggingCard?.classList.remove('dragging'); draggingCard = null; });
+        gallery.addEventListener('dragover', e => {
+            e.preventDefault();
+            const afterEl = [...gallery.querySelectorAll('.gallery-card:not(.dragging)')].reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = e.clientX - box.left - box.width / 2;
+                return (offset < 0 && offset > closest.offset) ? { offset, element: child } : closest;
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+            afterEl == null ? gallery.appendChild(draggingCard) : gallery.insertBefore(draggingCard, afterEl);
+        });
+
+        // Editor Logic
+        let currentZoom = 1, currentRotation = 0, isPanning = false, startX, startY, moveX = 0, moveY = 0;
+
+        gallery.addEventListener('click', e => {
+            const card = e.target.closest('.gallery-card');
+            if (card) {
+                const imgId = card.dataset.id;
+                lightboxImg.src = `${imgId}.jpg`;
+                lightboxImg.onerror = function() { this.onerror = null; this.src = `https://via.placeholder.com/600x900/111/c5a059.jpg?text=${imgId}`; };
+                resetView();
+                lightbox.classList.add('open');
+            }
+        });
+
+        document.getElementById('close-lightbox').addEventListener('click', () => lightbox.classList.remove('open'));
+
+        function resetView() {
+            currentZoom = 1; currentRotation = 0; moveX = 0; moveY = 0; updateTransform();
+            lightboxImg.className = '';
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            
+            // Reset Overlays
+            document.getElementById('frame-toggle').checked = false; 
+            document.querySelector('.gilded-frame').style.display = 'none';
+            document.getElementById('watermark-toggle').checked = false; 
+            document.querySelector('.aura-watermark').style.display = 'none';
+            document.getElementById('foil-toggle').checked = false;
+            document.querySelector('.gold-foil-layer').style.display = 'none';
+        }
+
+        function updateTransform() { 
+            imageWrapper.style.transform = `translate(${moveX}px, ${moveY}px) scale(${currentZoom}) rotate(${currentRotation}deg)`; 
+        }
+
+        document.querySelectorAll('.filter-btn[data-filter]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                lightboxImg.className = '';
+                document.querySelectorAll('.filter-btn[data-filter]').forEach(b => b.classList.remove('active'));
+                if (btn.dataset.filter !== 'reset') {
+                    lightboxImg.classList.add(`filter-${btn.dataset.filter}`);
+                    btn.classList.add('active');
+                }
+            });
+        });
+
+        // Overlay Listeners
+        document.getElementById('frame-toggle').addEventListener('change', e => document.querySelector('.gilded-frame').style.display = e.target.checked ? 'block' : 'none');
+        document.getElementById('watermark-toggle').addEventListener('change', e => document.querySelector('.aura-watermark').style.display = e.target.checked ? 'block' : 'none');
+        document.getElementById('foil-toggle').addEventListener('change', e => document.querySelector('.gold-foil-layer').style.display = e.target.checked ? 'block' : 'none');
+
+        document.getElementById('zoom-in').addEventListener('click', () => { currentZoom = Math.min(currentZoom + 0.2, 3); updateTransform(); });
+        document.getElementById('zoom-out').addEventListener('click', () => { currentZoom = Math.max(currentZoom - 0.2, 0.5); updateTransform(); });
+        document.getElementById('rotate-btn').addEventListener('click', () => { currentRotation += 90; updateTransform(); });
+        document.getElementById('reset-view').addEventListener('click', resetView);
+
+        viewfinder.addEventListener('mousedown', e => { isPanning = true; startX = e.clientX - moveX; startY = e.clientY - moveY; viewfinder.style.cursor = 'grabbing'; });
+        window.addEventListener('mousemove', e => { if (isPanning) { moveX = e.clientX - startX; moveY = e.clientY - startY; updateTransform(); } });
+        window.addEventListener('mouseup', () => { isPanning = false; viewfinder.style.cursor = 'grab'; });
+        viewfinder.addEventListener('wheel', e => { e.preventDefault(); currentZoom += e.deltaY > 0 ? -0.1 : 0.1; currentZoom = Math.min(Math.max(0.5, currentZoom), 3); updateTransform(); });
+
+        document.getElementById('export-btn').addEventListener('click', function() {
+            this.innerText = "PROCESSING...";
+            setTimeout(() => { this.innerText = "EXTRACT IMAGE"; alert("Prototype status: Output ready. Your visual artifact has been conceptually extracted."); }, 1000);
+        });
+    </script>
+</body>
+</html>
